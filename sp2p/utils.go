@@ -83,11 +83,11 @@ func HashAtDistance(a Hash, n int) (b Hash) {
 }
 
 func NodeFromKMsg(msg *KMsg) (*Node, error) {
-	nid, err := HexID(msg.FID)
+	nid, err := HexID(msg.ID)
 	if err != nil {
 		return nil, err
 	}
-	addr, err := net.ResolveUDPAddr("udp", msg.FAddr)
+	addr, err := net.ResolveUDPAddr("udp", msg.Addr)
 	if err != nil {
 		return nil, err
 	}

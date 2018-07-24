@@ -5,9 +5,17 @@ import (
 	log "github.com/inconshreveable/log15"
 	"sync"
 	"mu/cmn"
+	"github.com/kooksee/kdb"
 )
 
 var once1 sync.Once
+
+func (t *Config) GetDb() *kdb.KDB {
+	if t.db == nil {
+		panic("please init db")
+	}
+	return t.db
+}
 
 func GetCfg() *Config {
 	if instance == nil {
@@ -24,12 +32,11 @@ func GetHomeDir(defaultHome string) string {
 	return defaultHome
 }
 
-func Log() log.Logger {
-	cfg := GetCfg()
-	if cfg.l == nil {
+func (t *Config) Log() log.Logger {
+	if t.l == nil {
 		panic("please init log")
 	}
-	return cfg.l
+	return t.l
 }
 
 func NewCfg(defaultHomeDir string) *Config {

@@ -4,7 +4,7 @@ import (
 	"github.com/inconshreveable/log15"
 	"os"
 	"sync"
-	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/kooksee/kdb"
 	"path/filepath"
 )
 
@@ -16,7 +16,7 @@ var (
 type Config struct {
 	l        log15.Logger
 	home     string
-	Db       *leveldb.DB
+	db       *kdb.KDB
 	IsDev    bool
 	LogLevel string
 }
@@ -31,11 +31,8 @@ func (t *Config) InitLog() {
 }
 
 func (t *Config) InitDb() {
-	db, err := leveldb.OpenFile(filepath.Join(t.home, "db"), nil)
-	if err != nil {
-		panic(err.Error())
-	}
-	t.Db = db
+	kdb.InitKdb(filepath.Join(t.home, ""))
+	t.Db = kdb.GetKdb()
 }
 
 func (t *Config) MustNotErr(errs ... error) {

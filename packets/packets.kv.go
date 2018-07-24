@@ -1,18 +1,16 @@
 package packets
 
-import "github.com/kooksee/kfs/sp2p"
+import (
+	"github.com/kooksee/kfs/sp2p"
+)
 
 /*
 采用分片的方式进行kv存储,同时定时抽样的方式检测自己的数据是否有合适的节点可以存储
  */
 
-var kvPrefix = []byte("kv")
-
 type kv struct {
-	K       []byte `json:"k,omitempty"`
-	V       []byte `json:"v,omitempty"`
-	Expired int    `json:"expired,omitempty"`
-	Time    int    `json:"time,omitempty"`
+	K []byte `json:"k,omitempty"`
+	V []byte `json:"v,omitempty"`
 }
 
 type KVSetReq struct{ kv }
@@ -21,15 +19,15 @@ func (t *KVSetReq) T() byte        { return KVSetReqT }
 func (t *KVSetReq) String() string { return KVSetReqS }
 func (t *KVSetReq) OnHandle(p *sp2p.SP2p, msg *sp2p.KMsg) {
 	nodes := p.GetTable().FindNodeWithTargetBySelf(sp2p.BytesToHash(t.K))
-	if len(nodes) < cfg.NodePartitionNumber {
-		if err := cfg.GetDb().KHash(kvPrefix).Set(t.K, t.V); err != nil {
-			GetLog().Error("kvset error", "err", err)
+	if len(nodes) < 3 {
+		if err := kvDb.Set(t.K, t.V); err != nil {
+			logger.Error("kvset error", "err", err)
 		}
 		return
 	}
 
 	for _, node := range nodes {
-		p.writeTx(&KMsg{FAddr: msg.FAddr, Data: msg.Data, TAddr: node.AddrString()})
+		p.Write(&sp2p.KMsg{Addr: msg.Addr, Data: msg.Data, TAddr: node.AddrString()})
 	}
 }
 
@@ -37,19 +35,21 @@ type KVGetReq struct{ kv }
 
 func (t *KVGetReq) T() byte        { return KVGetReqT }
 func (t *KVGetReq) String() string { return KVGetReqS }
-func (t *KVGetReq) OnHandle(p *SP2p, msg *KMsg) {
-	nodes := p.GetTable().FindNodeWithTargetBySelf(BytesToHash(t.K))
-	if len(nodes) < cfg.NodePartitionNumber {
+func (t *KVGetReq) OnHandle(p *sp2p.SP2p, msg *sp2p.KMsg) {
+	nodes := p.GetTable().FindNodeWithTargetBySelf(sp2p.BytesToHash(t.K))
+	if len(nodes) < 3 {
 		resp := &KVGetResp{}
 		resp.K = t.K
-		resp.V, _ = GetDb().KHash(kvPrefix).Get(t.K)
+		resp.V, _ = kvDb.Get(t.K)
 
-		p.writeTx(&KMsg{Data: resp, TAddr: msg.FAddr})
-		return
+		if len(resp.V) != 0 {
+			p.Write(&sp2p.KMsg{Data: resp, TAddr: msg.Addr, TID: msg.ID})
+			return
+		}
 	}
 
 	for _, node := range nodes {
-		p.writeTx(&KMsg{Data: msg.Data, FAddr: msg.FAddr, TAddr: node.AddrString()})
+		p.Write(&sp2p.KMsg{Data: msg.Data, Addr: msg.Addr, ID: msg.ID, TID: node.ID.ToHex(), TAddr: node.AddrString()})
 	}
 }
 
@@ -57,8 +57,8 @@ type KVGetResp struct{ kv }
 
 func (t *KVGetResp) T() byte        { return KVGetRespT }
 func (t *KVGetResp) String() string { return KVGetRespS }
-func (t *KVGetResp) OnHandle(p *SP2p, msg *KMsg) {
-	if err := GetDb().KHash(kvPrefix).Set(t.K, t.V); err != nil {
-		GetLog().Error(err.Error())
+func (t *KVGetResp) OnHandle(p *sp2p.SP2p, msg *sp2p.KMsg) {
+	if err := kvDb.Set(t.K, t.V); err != nil {
+		logger.Error(err.Error())
 	}
 }
