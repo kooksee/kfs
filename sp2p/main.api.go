@@ -83,14 +83,14 @@ func (s *SP2p) PingN() {
 	go s.pingN()
 }
 
-func (s *SP2p) PingNode(taddr string) {
-	go s.pingNode(taddr)
+func (s *SP2p) PingNode(taddr, tid string) {
+	go s.pingNode(taddr, tid)
 }
 
 func (s *SP2p) FindN() {
 	go s.findN()
 }
 
-func (s *SP2p) FindNode(taddr string, n int) {
-	go s.findNode(taddr, n)
+func (s *SP2p) FindNode(taddr, tid string, n int) {
+	go s.findNode(taddr, tid, n)
 }

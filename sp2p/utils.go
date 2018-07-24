@@ -11,7 +11,7 @@ import (
 )
 
 func Errs(err ... string) string {
-	return strings.Join(err, "\n")
+	return strings.Join(err, "->")
 }
 
 var Fmt = fmt.Sprintf

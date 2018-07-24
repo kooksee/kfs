@@ -6,13 +6,13 @@ import (
 )
 
 func NewKBuffer() *KBuffer {
-	return &KBuffer{dmt: []byte{'\n'}}
+	return &KBuffer{dmt: []byte("\n")}
 }
 
 type KBuffer struct {
-	buf []byte
-	dmt []byte
-	sync.RWMutex
+	buf  []byte
+	dmt  []byte
+	lock sync.RWMutex
 }
 
 func (t *KBuffer) SetDmt(dmt []byte) *KBuffer {
@@ -21,8 +21,8 @@ func (t *KBuffer) SetDmt(dmt []byte) *KBuffer {
 }
 
 func (t *KBuffer) Next(b []byte) [][]byte {
-	t.Lock()
-	defer t.Unlock()
+	t.lock.Lock()
+	defer t.lock.Unlock()
 
 	if b == nil {
 		return nil

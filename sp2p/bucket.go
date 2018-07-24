@@ -49,6 +49,7 @@ func (b *bucket) addNodes(nodes ... *Node) {
 		b.peers.Sort(func(a, b interface{}) int { return int(b.(*Node).updateAt.Sub(a.(*Node).updateAt)) })
 		size := b.peers.Size()
 		if size < cfg.BucketSize {
+			// 不超过默认数量则不移除
 			return errors.New("")
 		}
 
@@ -65,7 +66,7 @@ func (b *bucket) addNodes(nodes ... *Node) {
 		}
 		return nil
 	}); err != nil {
-
+		logger.Error("bucket addNodes", "err", err.Error())
 	}
 
 }

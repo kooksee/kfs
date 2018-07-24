@@ -4,8 +4,8 @@ type FindNodeReq struct {
 	N int `json:"n,omitempty"`
 }
 
-func (t *FindNodeReq) T() byte          { return FindNodeReqT }
-func (t *FindNodeReq) String() string   { return FindNodeReqS }
+func (t *FindNodeReq) T() byte        { return FindNodeReqT }
+func (t *FindNodeReq) String() string { return FindNodeReqS }
 func (t *FindNodeReq) OnHandle(p *SP2p, msg *KMsg) {
 
 	node, err := NodeFromKMsg(msg)
@@ -32,8 +32,8 @@ type FindNodeResp struct {
 	Nodes []string `json:"nodes,omitempty"`
 }
 
-func (t *FindNodeResp) T() byte          { return FindNodeRespT }
-func (t *FindNodeResp) String() string   { return FindNodeRespS }
+func (t *FindNodeResp) T() byte        { return FindNodeRespT }
+func (t *FindNodeResp) String() string { return FindNodeRespS }
 func (t *FindNodeResp) OnHandle(p *SP2p, msg *KMsg) {
 	for _, n := range t.Nodes {
 		node, err := ParseNode(n)

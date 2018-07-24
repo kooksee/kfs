@@ -1,4 +1,6 @@
-package sp2p
+package packets
+
+import "github.com/kooksee/kfs/sp2p"
 
 /*
 采用分片的方式进行kv存储,同时定时抽样的方式检测自己的数据是否有合适的节点可以存储
@@ -17,10 +19,10 @@ type KVSetReq struct{ kv }
 
 func (t *KVSetReq) T() byte        { return KVSetReqT }
 func (t *KVSetReq) String() string { return KVSetReqS }
-func (t *KVSetReq) OnHandle(p *SP2p, msg *KMsg) {
-	nodes := p.GetTable().FindNodeWithTargetBySelf(BytesToHash(t.K))
+func (t *KVSetReq) OnHandle(p *sp2p.SP2p, msg *sp2p.KMsg) {
+	nodes := p.GetTable().FindNodeWithTargetBySelf(sp2p.BytesToHash(t.K))
 	if len(nodes) < cfg.NodePartitionNumber {
-		if err := GetDb().KHash(kvPrefix).Set(t.K, t.V); err != nil {
+		if err := cfg.GetDb().KHash(kvPrefix).Set(t.K, t.V); err != nil {
 			GetLog().Error("kvset error", "err", err)
 		}
 		return

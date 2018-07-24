@@ -34,10 +34,17 @@ func NewSP2p() *SP2p {
 	}
 	p2p.rconn = cnn
 
-	if conn, err := net.DialTCP("tcp", nil, p2p.localAddr); err != nil {
-		panic(Errs(Fmt("udp %s listen error", p2p.localAddr), err.Error()))
-	} else {
-		p2p.conn = conn
+	// 连接服务端等待
+	// todo: 同时连接多个服务端切换
+	// todo: 尝试连接不同的服务端
+	for {
+		if conn, err := net.DialTCP("tcp", nil, p2p.localAddr); err != nil {
+			logger.Error(Errs(Fmt("udp %s listen error", p2p.localAddr), err.Error()))
+			time.Sleep(time.Second * 2)
+		} else {
+			p2p.conn = conn
+			break
+		}
 	}
 
 	// 生成node id
@@ -48,6 +55,11 @@ func NewSP2p() *SP2p {
 	logger.Debug("create table", "table")
 
 	p2p.tab = newTable(nodeId, p2p.localAddr)
+
+	// 把seeds添加到集群中
+	for _, s := range cfg.Seeds {
+		p2p.tab.UpdateNode(MustParseNode(s))
+	}
 
 	go p2p.accept()
 	go p2p.loop()
@@ -81,9 +93,20 @@ func (s *SP2p) GetAddr() string {
 	return s.laddr
 }
 
+func (s *SP2p) pingRaley() {
+	m := &KMsg{
+		TID:   s.tab.selfNode.ID.ToHex(),
+		TAddr: s.GetAddr(),
+	}
+	s.conn.Write(m.Dumps())
+}
+
 func (s *SP2p) loop() {
 	for {
 		select {
+		case <-cfg.RelayTick.C:
+			// 定时访问一下中继
+			go s.pingRaley()
 		case <-cfg.FindNodeTick.C:
 			// 定时查找其他的节点
 			go s.findN()
@@ -141,18 +164,10 @@ func (s *SP2p) write(msg *KMsg) {
 	}
 }
 
-func (s *SP2p) pingNode(taddr, tid string) {
-	s.writeTx(&KMsg{TAddr: taddr, TID: tid, Data: &PingReq{}})
-}
-
 func (s *SP2p) pingN() {
 	for _, n := range s.tab.FindRandomNodes(cfg.PingNodeNum) {
-		s.pingNode(n.AddrString(), n.ID.ToHex())
+		s.writeTx(&KMsg{TAddr: n.AddrString(), TID: n.ID.ToHex(), Data: &PingReq{}})
 	}
-}
-
-func (s *SP2p) findNode(taddr, tid string, n int) {
-	s.writeTx(&KMsg{TAddr: taddr, TID: tid, Data: &FindNodeReq{N: n}})
 }
 
 func (s *SP2p) findN() {
@@ -161,7 +176,7 @@ func (s *SP2p) findN() {
 			continue
 		}
 		n := b.Random()
-		s.findNode(n.AddrString(), n.ID.ToHex(), cfg.FindNodeNUm)
+		s.writeTx(&KMsg{TAddr: n.AddrString(), TID: n.ID.ToHex(), Data: &FindNodeReq{N: cfg.FindNodeNUm}})
 	}
 }
 
@@ -183,8 +198,6 @@ func (s *SP2p) accept() {
 			time.Sleep(time.Second * 2)
 			continue
 		}
-
-		logger.Debug(string(buf))
 
 		messages := kb.Next(buf[:n])
 		if messages == nil {

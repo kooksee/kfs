@@ -29,6 +29,7 @@ type KConfig struct {
 	PingTick     *time.Ticker
 	FindNodeTick *time.Ticker
 	NtpTick      *time.Ticker
+	RelayTick    *time.Ticker
 
 	// Kademlia concurrency factor
 	Alpha int
@@ -129,6 +130,7 @@ func InitCfg() *KConfig {
 		PingTick:     time.NewTicker(10 * time.Minute),
 		FindNodeTick: time.NewTicker(1 * time.Hour),
 		NtpTick:      time.NewTicker(10 * time.Minute),
+		RelayTick:    time.NewTicker(time.Minute),
 
 		MaxNodeSize: 2000,
 		MinNodeSize: 100,
