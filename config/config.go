@@ -24,7 +24,7 @@ func GetCfg() *Config {
 	return instance
 }
 
-func GetHomeDir(defaultHome string) string {
+func homeDir(defaultHome string) string {
 	if len(os.Args) > 2 && os.Args[len(os.Args)-2] == "--home" {
 		defaultHome = os.Args[len(os.Args)-1]
 		os.Args = os.Args[:len(os.Args)-2]
@@ -40,7 +40,7 @@ func (t *Config) Log() log.Logger {
 }
 
 func NewCfg(defaultHomeDir string) *Config {
-	defaultHomeDir = GetHomeDir(defaultHomeDir)
+	defaultHomeDir = homeDir(defaultHomeDir)
 	instance = &Config{}
 
 	instance.home = defaultHomeDir
