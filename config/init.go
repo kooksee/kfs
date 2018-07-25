@@ -5,6 +5,8 @@ import (
 	"os"
 	"github.com/kooksee/kdb"
 	"path/filepath"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/ethereum/go-ethereum/accounts"
 )
 
 var (
@@ -16,8 +18,10 @@ type Config struct {
 	IsDev    bool
 	LogLevel string
 
-	l  log15.Logger
-	db *kdb.KDB
+	l        log15.Logger
+	db       *kdb.KDB
+	keyStore *keystore.KeyStore
+	account  accounts.Account
 }
 
 func (t *Config) InitLog() {
@@ -27,6 +31,14 @@ func (t *Config) InitLog() {
 		panic(err.Error())
 	}
 	t.l.SetHandler(log15.LvlFilterHandler(ll, log15.StreamHandler(os.Stdout, log15.TerminalFormat())))
+}
+
+func (t *Config) InitKeyStore() {
+	t.keyStore = keystore.NewKeyStore(t.Home, keystore.LightScryptN, keystore.LightScryptP)
+	if len(t.keyStore.Accounts()) != 1 {
+		panic("please contain one account keystore ")
+	}
+	t.account = t.keyStore.Accounts()[0]
 }
 
 func (t *Config) InitDb() {

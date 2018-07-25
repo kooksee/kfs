@@ -6,7 +6,7 @@ import (
 	"github.com/kooksee/kdb"
 	"os"
 	"path/filepath"
-	"crypto/ecdsa"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 )
 
 var cfg *KConfig
@@ -61,10 +61,10 @@ type KConfig struct {
 	Seeds []string
 	KvKey []byte
 
-	PriV  *ecdsa.PrivateKey
-	uuidC chan string
-	db    *kdb.KDB
-	l     log15.Logger
+	KeyStore *keystore.KeyStore
+	uuidC    chan string
+	db       *kdb.KDB
+	l        log15.Logger
 }
 
 func (t *KConfig) InitLog(l ... log15.Logger) *KConfig {

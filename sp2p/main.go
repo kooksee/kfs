@@ -3,7 +3,6 @@ package sp2p
 import (
 	"net"
 	"github.com/satori/go.uuid"
-	"github.com/ethereum/go-ethereum/crypto"
 	"io"
 	"time"
 	"strings"
@@ -48,7 +47,7 @@ func NewSP2p() *SP2p {
 	}
 
 	// 生成node id
-	nodeId := MustBytesID(crypto.FromECDSAPub(&cfg.PriV.PublicKey))
+	nodeId := MustBytesID(cfg.KeyStore.Accounts()[0].Address.Bytes())
 	p2p.nid = nodeId.ToHex()
 
 	logger.Debug("node id", "id", nodeId)
