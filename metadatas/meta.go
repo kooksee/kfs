@@ -16,13 +16,13 @@ type Metadata struct {
 
 	ID        string            `json:"id,omitempty"`
 	Abstract  string            `json:"abstract,omitempty"`
-	Category  string            `json:"category,omitempty"`
-	Tag       string            `json:"tag,omitempty"`
+	Category  []string          `json:"category,omitempty"`
+	Tag       []string          `json:"tag,omitempty"`
 	DNA       string            `json:"dna,omitempty"`
 	ChunkNum  uint64            `json:"chunk_num,omitempty"`
 	ParentDna string            `json:"parent_dna,omitempty"`
 	Extra     map[string]string `json:"extra,omitempty"`
-	Status    string            `json:"status,omitempty"`
+	Status    Status            `json:"status,omitempty"`
 	Source    string            `json:"source,omitempty"`
 	Title     string            `json:"title,omitempty"`
 }
