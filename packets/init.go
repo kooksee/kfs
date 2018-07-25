@@ -24,5 +24,8 @@ func Init() {
 		KVSetReq{},
 		KVGetReq{},
 		KVGetResp{},
+
+		ChatReq{},
+		ChatResp{},
 	)
 }

@@ -3,22 +3,21 @@ package config
 import (
 	"github.com/inconshreveable/log15"
 	"os"
-	"sync"
 	"github.com/kooksee/kdb"
 	"path/filepath"
 )
 
 var (
-	once     sync.Once
 	instance *Config
 )
 
 type Config struct {
-	l        log15.Logger
-	home     string
-	db       *kdb.KDB
+	Home     string
 	IsDev    bool
 	LogLevel string
+
+	l  log15.Logger
+	db *kdb.KDB
 }
 
 func (t *Config) InitLog() {
@@ -31,16 +30,6 @@ func (t *Config) InitLog() {
 }
 
 func (t *Config) InitDb() {
-	kdb.InitKdb(filepath.Join(t.home, ""))
-	t.Db = kdb.GetKdb()
-}
-
-func (t *Config) MustNotErr(errs ... error) {
-	for _, err := range errs {
-		if err != nil {
-			t.l.Error(err.Error())
-			t.l.Error("看看看看看")
-			panic(err.Error())
-		}
-	}
+	kdb.InitKdb(filepath.Join(t.Home, "db"))
+	t.db = kdb.GetKdb()
 }

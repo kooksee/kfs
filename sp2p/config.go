@@ -61,28 +61,30 @@ type KConfig struct {
 	Seeds []string
 	KvKey []byte
 
-	priv  *ecdsa.PrivateKey
+	PriV  *ecdsa.PrivateKey
 	uuidC chan string
 	db    *kdb.KDB
 	l     log15.Logger
 }
 
-func (t *KConfig) InitLog(l ... log15.Logger) {
+func (t *KConfig) InitLog(l ... log15.Logger) *KConfig {
 	if len(l) != 0 {
 		t.l = l[0].New("package", "sp2p")
 	} else {
 		t.l = log15.New("package", "sp2p")
 		t.l.SetHandler(log15.LvlFilterHandler(log15.LvlDebug, log15.StreamHandler(os.Stdout, log15.TerminalFormat())))
 	}
+	return t
 }
 
-func (t *KConfig) InitDb(db ... *kdb.KDB) {
+func (t *KConfig) InitDb(db ... *kdb.KDB) *KConfig {
 	if len(db) != 0 {
 		t.db = db[0]
 	} else {
 		kdb.InitKdb(filepath.Join("kdata", "db"))
 		t.db = kdb.GetKdb()
 	}
+	return t
 }
 
 func GetLog() log15.Logger {

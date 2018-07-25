@@ -2,13 +2,10 @@ package config
 
 import (
 	"os"
-	log "github.com/inconshreveable/log15"
-	"sync"
-	"mu/cmn"
+	"github.com/inconshreveable/log15"
 	"github.com/kooksee/kdb"
+	"github.com/kooksee/kfs/cmn"
 )
-
-var once1 sync.Once
 
 func (t *Config) GetDb() *kdb.KDB {
 	if t.db == nil {
@@ -32,7 +29,7 @@ func homeDir(defaultHome string) string {
 	return defaultHome
 }
 
-func (t *Config) Log() log.Logger {
+func (t *Config) Log() log15.Logger {
 	if t.l == nil {
 		panic("please init log")
 	}
@@ -43,10 +40,10 @@ func NewCfg(defaultHomeDir string) *Config {
 	defaultHomeDir = homeDir(defaultHomeDir)
 	instance = &Config{}
 
-	instance.home = defaultHomeDir
+	instance.Home = defaultHomeDir
 	instance.LogLevel = "debug"
 
-	cmn.EnsureDir(instance.home, os.FileMode(0755))
+	cmn.MustNotErr(cmn.EnsureDir(instance.Home, os.FileMode(0755)))
 
 	return instance
 }

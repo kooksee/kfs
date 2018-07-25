@@ -6,8 +6,6 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-
-
 type CustomValidator struct {
 	validator *validator.Validate
 }
@@ -25,7 +23,6 @@ func initMiddles(e *echo.Echo) {
 	e.Use(middleware.RequestID())
 	e.Validator = &CustomValidator{validator: validator.New()}
 }
-
 
 /*
 // v1:=e.Group("v1", middleware.BasicAuth(func(s string, s2 string, context echo.Context) (bool, error) {

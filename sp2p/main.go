@@ -48,7 +48,7 @@ func NewSP2p() *SP2p {
 	}
 
 	// 生成node id
-	nodeId := MustBytesID(crypto.FromECDSAPub(&cfg.priv.PublicKey))
+	nodeId := MustBytesID(crypto.FromECDSAPub(&cfg.PriV.PublicKey))
 	p2p.nid = nodeId.ToHex()
 
 	logger.Debug("node id", "id", nodeId)
@@ -181,7 +181,7 @@ func (s *SP2p) findN() {
 }
 
 func (s *SP2p) accept() {
-	kb := NewKBuffer()
+	kb := newKBuffer()
 	logger := GetLog()
 	for {
 		buf := make([]byte, cfg.MaxBufLen)

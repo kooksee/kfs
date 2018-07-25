@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-func NewKBuffer() *KBuffer {
+func newKBuffer() *KBuffer {
 	return &KBuffer{dmt: []byte("\n")}
 }
 

@@ -19,3 +19,11 @@ func FileExists(filePath string) bool {
 	_, err := os.Stat(filePath)
 	return !os.IsNotExist(err)
 }
+
+func MustNotErr(errs ... error) {
+	for _, err := range errs {
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+}

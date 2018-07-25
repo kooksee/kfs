@@ -15,6 +15,8 @@ func RunCmd() {
 		isDevflag(),
 	}
 	app.Commands = []cli.Command{
+		DaemonCmd(),
+		AccountCmd(),
 	}
 
 	sort.Sort(cli.FlagsByName(app.Flags))
