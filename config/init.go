@@ -7,6 +7,11 @@ import (
 	"path/filepath"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/accounts"
+	"fmt"
+	"bufio"
+	"time"
+	"quorum/crypto"
+	"bytes"
 )
 
 var (
@@ -51,7 +56,48 @@ func (t *Config) GetKeyStore() *keystore.KeyStore {
 }
 
 func (t *Config) Sign(hash []byte) ([]byte, error) {
-	return t.GetKeyStore().SignHashWithPassphrase(t.account, "", hash)
+	return t.GetKeyStore().SignHash(t.account, hash)
+}
+
+func (t *Config) Unlock() {
+	fmt.Print("your passwd: ")
+	passwd, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	if err != nil {
+		panic(fmt.Sprintf("The input was: %s\n", err.Error()))
+	}
+
+	fmt.Print("unlock time(300ms, -1.5h or 2h45m): ")
+	tm, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	if err != nil {
+		panic(fmt.Sprintf("The input was: %s\n", err.Error()))
+	}
+
+	dur, err := time.ParseDuration(tm)
+	if err != nil {
+		panic(err.Error())
+	}
+	if err := t.keyStore.TimedUnlock(t.account, passwd, dur); err != nil {
+		panic(err.Error())
+	}
+	return
+}
+
+func (t *Config) CheckSign(hash []byte, sig []byte) ([]byte, error) {
+	return crypto.Ecrecover(hash, sig)
+}
+
+func (t *Config) PubkeyToAddress(pubkey []byte) []byte {
+	return crypto.PubkeyToAddress(*crypto.ToECDSAPub(pubkey)).Bytes()
+}
+
+func (t *Config) CheckLocalAddress(hash []byte, sig []byte) bool {
+	pubk, err := t.CheckSign(hash, sig)
+	if err != nil {
+		t.Log().Error("CheckSign Error", "err", err.Error())
+		return false
+	}
+
+	return bytes.Equal(t.account.Address.Bytes(), t.PubkeyToAddress(pubk))
 }
 
 func (t *Config) GetAccount() accounts.Account {

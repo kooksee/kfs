@@ -1,9 +1,10 @@
 package types
 
 type RPCRequest struct {
-	ID     string                 `json:"id"`
-	Method string                 `json:"method"`
-	Params map[string]interface{} `json:"params"`
+	ID        string                 `json:"id"`
+	Method    string                 `json:"method"`
+	Signature string                 `json:"sign,omitempty"`
+	Params    map[string]interface{} `json:"params,omitempty"`
 }
 
 type RPCResponse struct {
