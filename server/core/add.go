@@ -2,8 +2,12 @@ package core
 
 import "github.com/kooksee/kfs/types"
 
+type ApiCore struct {
+	IApiCore
+}
+
 // 把文件添加到kfs中
-func FileAdd(f string) error {
+func (a *ApiCore) FileAdd(f string) error {
 
 	meta, err := types.CreateFileMeta(kvDb, f)
 	if err != nil {
@@ -18,8 +22,7 @@ func FileAdd(f string) error {
 	return metaDb.Set([]byte(meta.(*types.Metadata).ID), d)
 }
 
-// 查看文件的metadata
-func FileList(hash string) error {
-
+// 删除文件,删除历史以及metadata
+func (a *ApiCore) FileRm(hash string) error {
 	return nil
 }

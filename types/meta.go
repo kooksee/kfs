@@ -14,6 +14,7 @@ type Metadata struct {
 	Source    string            `json:"source,omitempty"`
 	Title     string            `json:"title,omitempty"`
 	Include   []string          `json:"include,omitempty"`
+	Data      map[string]string `json:"data,omitempty"`
 
 	ContentHash string `json:"content_hash,omitempty"`
 	CreateTime  int64  `json:"create_time,omitempty"`

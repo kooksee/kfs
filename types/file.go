@@ -13,3 +13,8 @@ type FileMeta struct {
 type ImageMeta struct {
 	FileMeta
 }
+
+type NameHash struct {
+	Name string `json:"name"`
+	Hash string `json:"hash"`
+}
