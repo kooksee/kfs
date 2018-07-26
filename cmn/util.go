@@ -3,6 +3,7 @@ package cmn
 import (
 	"os"
 	"fmt"
+	"errors"
 )
 
 func EnsureDir(dir string, mode os.FileMode) error {
@@ -26,4 +27,8 @@ func MustNotErr(errs ... error) {
 			panic(err.Error())
 		}
 	}
+}
+
+func Err(err string, params ...interface{}) error {
+	return errors.New(fmt.Sprintf(err, params...))
 }

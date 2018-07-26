@@ -18,6 +18,7 @@ type Config struct {
 	IsDev    bool
 	LogLevel string
 	Seeds    []string
+	Adds     []string
 
 	l        log15.Logger
 	db       *kdb.KDB
@@ -49,8 +50,12 @@ func (t *Config) GetKeyStore() *keystore.KeyStore {
 	return t.keyStore
 }
 
+func (t *Config) Sign(hash []byte) ([]byte, error) {
+	return t.GetKeyStore().SignHashWithPassphrase(t.account, "", hash)
+}
+
 func (t *Config) GetAccount() accounts.Account {
-	return t.account
+	return t.GetKeyStore().Accounts()[0]
 }
 
 func (t *Config) InitDb() {

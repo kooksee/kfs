@@ -59,7 +59,6 @@ type KConfig struct {
 	Adds []string
 
 	Seeds []string
-	KvKey []byte
 
 	KeyStore *keystore.KeyStore
 	uuidC    chan string
@@ -140,9 +139,7 @@ func InitCfg() *KConfig {
 
 		BucketSize:  16,
 		StoreAckNum: 2,
-
-		KvKey: []byte("kv:"),
-
+		
 		uuidC: make(chan string, 500),
 	}
 

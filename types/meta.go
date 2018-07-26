@@ -22,7 +22,6 @@ type Metadata struct {
 	Status      Status `json:"status,omitempty"`
 	Language    string `json:"language,omitempty"`
 	Signature   string `json:"signature,omitempty"`
-	Type        string `json:"type,omitempty"`
 	License struct {
 		Type   string            `json:"type,omitempty"`
 		Params map[string]string `json:"parameters,omitempty"`

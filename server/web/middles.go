@@ -19,7 +19,6 @@ func initMiddles(e *echo.Echo) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
-
 	e.Use(middleware.RequestID())
 	e.Validator = &CustomValidator{validator: validator.New()}
 }

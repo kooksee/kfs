@@ -24,3 +24,7 @@
 ## kfs pin file_hash
 把该文件固定到本地中
 该命令会在本文件下载完毕之后然后把本节点地址以及文件地址发布到去中心化的cache中
+
+pin的内容在自己的内容库
+cache的内容在cache库
+只是对metadata的操作

@@ -106,10 +106,6 @@ func NodesBackupKey(k []byte) []byte {
 	return append([]byte(cfg.NodesBackupKey), k...)
 }
 
-func KvKey(k []byte) []byte {
-	return append([]byte(cfg.KvKey), k...)
-}
-
 // table of leading zero counts for bytes [0..255]
 var lzcount = [256]int{
 	8, 7, 6, 6, 5, 5, 5, 5,

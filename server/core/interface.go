@@ -11,13 +11,14 @@ type IApiCore interface {
 	FileRm(hash string) error
 
 	// 列出所有的文件,只列出最新的文件名以及对应的hash
-	FileList() []types.NameHash
+	// n=-1 列出所有的数据,n!=-1就列出n条数据
+	FileList(n int64) []types.NameHash
 
 	// 查看该文件的历史记录,n: 第几次的历史记录
 	// 返回对应的内容
 	// 当n=-1的时候是最新的内容
 	FileHistory(hash string, n int64) []byte
-	
+
 	// 通过hash获得该文件,并放到自己的缓存中
 	// 返回对应的内容
 	FileGet(hash string) []byte
@@ -53,4 +54,32 @@ type IApiCore interface {
 
 	// 根据节点的地址添加该节点
 	PeerAdd(nodeUrl string)
+
+	// object,内容对象操作
+	// 添加内容
+	ObjectAdd(hash string, data []byte) error
+
+	// 列出对象
+	ObjectList(n uint64) []types.NameHash
+
+	// 删除对象
+	ObjectRm(hash string) error
+
+	// 获得该对象的历史记录
+	// n=-1获得最新的
+	ObjectHistory(hash string, n int64) []byte
+
+	// 获得该对象的内容
+	// 必须是有metadata的对象才行
+	ObjectGet(hash string) []byte
+
+	// 固化对象的内容
+	ObjectPin(hash string) error
+
+	// 把对象的内容分享出去,该内容必须是自己本地的数据而且网上不存在的
+	ObjectShare(hash string) error
+}
+
+type ApiCore struct {
+	IApiCore
 }

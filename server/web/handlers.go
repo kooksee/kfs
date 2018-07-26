@@ -4,7 +4,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/kooksee/kfs/types"
 	"net/http"
-	"github.com/kooksee/kfs/server/core"
 )
 
 func index(c echo.Context) error {
@@ -18,7 +17,6 @@ func index(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, types.RPCResponse{Code: 404, Msg: "方法不存在"})
 
 	case "file.add":
-		core.FileAdd(str(req.Params["f"]))
 	case "file.list":
 	case "file.rm":
 	case "file.get":

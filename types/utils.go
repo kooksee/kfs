@@ -14,7 +14,6 @@ import (
 
 func CreateFileMeta(db *kdb.KHash, f string) (IMetadata, error) {
 	fm := &FileMeta{}
-	fm.Type = "file"
 
 	d, err := ioutil.ReadFile(f)
 	if err != nil {
