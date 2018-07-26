@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/urfave/cli"
 	"github.com/kooksee/kfs/sp2p"
+	"github.com/kooksee/kfs/packets"
 )
 
 func DaemonCmd() cli.Command {
@@ -13,7 +14,11 @@ func DaemonCmd() cli.Command {
 		Flags:   []cli.Flag{},
 		Action: func(c *cli.Context) error {
 			f := sp2p.InitCfg().InitLog(logger).InitDb(cfg.GetDb())
-			f.PriV = nil
+			f.Seeds = cfg.Seeds
+			f.KeyStore = cfg.GetKeyStore()
+
+			// 注册handle
+			packets.Init()
 
 			sp2p.NewSP2p()
 

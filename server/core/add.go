@@ -1,11 +1,11 @@
 package core
 
-import "github.com/kooksee/kfs/metadatas"
+import "github.com/kooksee/kfs/types"
 
 // 把文件添加到kfs中
 func FileAdd(f string) error {
 
-	meta, err := metadatas.CreateFileMeta(kvDb, f)
+	meta, err := types.CreateFileMeta(kvDb, f)
 	if err != nil {
 		return err
 	}
@@ -15,7 +15,7 @@ func FileAdd(f string) error {
 		return err
 	}
 
-	return metaDb.Set([]byte(meta.(*metadatas.Metadata).ID), d)
+	return metaDb.Set([]byte(meta.(*types.Metadata).ID), d)
 }
 
 // 查看文件的metadata

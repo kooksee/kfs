@@ -1,0 +1,6 @@
+BuildVersion:
+  sh: "echo `date +%FT%T%z`"
+GitCommit:
+  sh: "echo `git rev-parse --short=8 HEAD`"
+Version: "v0.2.0"
+VersionFile: "version/version.go"

@@ -17,6 +17,8 @@ func RunCmd() {
 	app.Commands = []cli.Command{
 		DaemonCmd(),
 		AccountCmd(),
+		VersionCmd(),
+		BootstrapCmd(),
 	}
 
 	sort.Sort(cli.FlagsByName(app.Flags))

@@ -23,7 +23,15 @@ func index(c echo.Context) error {
 	case "file.rm":
 	case "file.get":
 	case "file.pin":
-	case "metadata.list":
+
+	case "metadata.ls":
+	case "metadata.update":
+	case "metadata.add":
+	case "metadata.rm":
+
+	case "peer.ls":
+	case "peer.rm":
+	case "peer.add":
 	}
 
 	return nil

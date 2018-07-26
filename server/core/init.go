@@ -18,7 +18,7 @@ var (
 
 func Init() {
 	cfg = config.GetCfg()
-	logger = cfg.Log().New("package", "packets")
+	logger = cfg.Log().New("package", "api.core")
 	kvDb = cfg.GetDb().KHash(kvPrefix)
 	metaDb = cfg.GetDb().KHash(metaPrefix)
 }

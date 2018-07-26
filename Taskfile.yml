@@ -1,0 +1,28 @@
+
+#项目版本处理
+_version:
+  cmds:
+    - echo "package version" > {{.VersionFile}}
+    - echo 'const Version = "{{.Version}}"' >> {{.VersionFile}}
+    - echo 'const BuildVersion = "{{.BuildVersion}}"' >> {{.VersionFile}}
+    - echo 'const GitCommit = "{{.GitCommit}}"' >> {{.VersionFile}}
+
+build:
+  deps: [_version]
+  cmds:
+    - GOBIN=`pwd` go install main.go
+
+b:
+  desc: 编译应用
+  deps: [build]
+
+dev:
+  desc: 编译应用
+  cmds:
+    - ./main daemon
+
+build_linux:
+  desc: 交叉编译成linux应用
+  deps: [_version]
+  cmds:
+    - GOBIN=`pwd` CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install main.go

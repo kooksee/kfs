@@ -17,6 +17,7 @@ type Config struct {
 	Home     string
 	IsDev    bool
 	LogLevel string
+	Seeds    []string
 
 	l        log15.Logger
 	db       *kdb.KDB
@@ -39,6 +40,17 @@ func (t *Config) InitKeyStore() {
 		panic("please contain one account keystore ")
 	}
 	t.account = t.keyStore.Accounts()[0]
+}
+
+func (t *Config) GetKeyStore() *keystore.KeyStore {
+	if t.keyStore == nil {
+		panic("please init keystore")
+	}
+	return t.keyStore
+}
+
+func (t *Config) GetAccount() accounts.Account {
+	return t.account
 }
 
 func (t *Config) InitDb() {

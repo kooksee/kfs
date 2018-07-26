@@ -1,4 +1,4 @@
-package metadatas
+package types
 
 type FileMeta struct {
 	Metadata

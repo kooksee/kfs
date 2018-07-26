@@ -1,4 +1,4 @@
-package metadatas
+package types
 
 type IMetadata interface {
 	Decode(data []byte) (err error)
