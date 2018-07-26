@@ -1,6 +1,9 @@
 package core
 
-import "github.com/kooksee/kfs/types"
+import (
+	"github.com/kooksee/kfs/types"
+	"time"
+)
 
 type IApiCore interface {
 	// file
@@ -47,13 +50,14 @@ type IApiCore interface {
 
 	// peer
 	// 列出所有的节点,或者列出n个节点
-	PeerList(n uint64)
+	//n=-1列出所有的节点
+	PeerList(n uint64) []string
 
 	// 根据节点的ID删除该节点
-	PeerRm(nodeID string)
+	PeerRm(nodeID string) error
 
 	// 根据节点的地址添加该节点
-	PeerAdd(nodeUrl string)
+	PeerAdd(nodeUrl string) error
 
 	// object,内容对象操作
 	// 添加内容
@@ -73,11 +77,18 @@ type IApiCore interface {
 	// 必须是有metadata的对象才行
 	ObjectGet(hash string) []byte
 
-	// 固化对象的内容
+	// 固化对象的内容,并向缓存系统广播自己缓存的内容
 	ObjectPin(hash string) error
 
 	// 把对象的内容分享出去,该内容必须是自己本地的数据而且网上不存在的
+	// 分享出去的同时并把metadata信息存放到区块链上
 	ObjectShare(hash string) error
+
+	// 解锁本账户
+	AccountUnLock(passwd string, duration time.Duration) error
+
+	// 锁定本账户
+	AccountLock() error
 }
 
 type ApiCore struct {

@@ -19,11 +19,12 @@ var (
 )
 
 type Config struct {
-	Home     string
-	IsDev    bool
-	LogLevel string
-	Seeds    []string
-	Adds     []string
+	Home      string
+	IsDev     bool
+	LogLevel  string
+	Seeds     []string
+	RelayAdds []string
+	CacheAdds []string
 
 	l        log15.Logger
 	db       *kdb.KDB
