@@ -2,7 +2,7 @@ package core
 
 import (
 	"github.com/kooksee/kfs/types"
-	"github.com/kooksee/kfs/cmn"
+	"github.com/kooksee/cmn"
 )
 
 // 把文件添加到kfs中
@@ -13,8 +13,8 @@ func (a *ApiCore) FileAdd(f string) error {
 	// 存储文件的分片和metadata
 	// 签名，活的DNA
 
-	if !cmn.FileExists(f) {
-		return cmn.Err("文件%s不存在", f)
+	if !cmn.OS.FileExists(f) {
+		return cmn.Err.Err("文件%s不存在", f)
 	}
 
 	meta, err := types.CreateFileMeta(kvDb, f)

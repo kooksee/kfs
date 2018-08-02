@@ -5,3 +5,5 @@ type IMetadata interface {
 	Encode() (data []byte, err error)
 	Sign() (data []byte, err error)
 }
+
+type ISubMetadata interface{}

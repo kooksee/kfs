@@ -12,7 +12,7 @@ import (
 	"github.com/kooksee/kdb"
 )
 
-func CreateFileMeta(db *kdb.KHash, f string) (IMetadata, error) {
+func CreateFileMeta(db kdb.IKHash, f string) (IMetadata, error) {
 	fm := &FileMeta{}
 
 	d, err := ioutil.ReadFile(f)

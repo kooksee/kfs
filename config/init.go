@@ -27,7 +27,7 @@ type Config struct {
 	CacheAdds []string
 
 	l        log15.Logger
-	db       *kdb.KDB
+	db       kdb.IKDB
 	keyStore *keystore.KeyStore
 	account  accounts.Account
 }
@@ -106,6 +106,7 @@ func (t *Config) GetAccount() accounts.Account {
 }
 
 func (t *Config) InitDb() {
-	kdb.InitKdb(filepath.Join(t.Home, "db"))
-	t.db = kdb.GetKdb()
+	kf := kdb.DefaultConfig()
+	kf.InitKdb(filepath.Join(t.Home, "db"))
+	t.db = kf.GetDb()
 }

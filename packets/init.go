@@ -1,7 +1,7 @@
 package packets
 
 import (
-	"github.com/kooksee/kfs/sp2p"
+	"github.com/kooksee/sp2p"
 	"github.com/inconshreveable/log15"
 	"github.com/kooksee/kfs/config"
 	"github.com/kooksee/kdb"
@@ -10,7 +10,7 @@ import (
 var (
 	logger log15.Logger
 	cfg    *config.Config
-	kvDb   *kdb.KHash
+	kvDb   kdb.IKHash
 
 	kvPrefix = []byte("kv")
 )
@@ -20,7 +20,7 @@ func Init() {
 	logger = cfg.Log().New("package", "packets")
 	kvDb = cfg.GetDb().KHash(kvPrefix)
 
-	sp2p.GetHManager().Registry(
+	sp2p.RegistryHandlers(
 		KVSetReq{},
 		KVGetReq{},
 		KVGetResp{},

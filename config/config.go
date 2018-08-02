@@ -4,10 +4,10 @@ import (
 	"os"
 	"github.com/inconshreveable/log15"
 	"github.com/kooksee/kdb"
-	"github.com/kooksee/kfs/cmn"
+	"github.com/kooksee/cmn"
 )
 
-func (t *Config) GetDb() *kdb.KDB {
+func (t *Config) GetDb() kdb.IKDB {
 	if t.db == nil {
 		panic("please init db")
 	}
@@ -43,7 +43,7 @@ func NewCfg(defaultHomeDir string) *Config {
 	instance.Home = defaultHomeDir
 	instance.LogLevel = "debug"
 
-	cmn.MustNotErr(cmn.EnsureDir(instance.Home, os.FileMode(0755)))
+	cmn.Err.MustNotErr(cmn.OS.EnsureDir(instance.Home, os.FileMode(0755)))
 
 	return instance
 }

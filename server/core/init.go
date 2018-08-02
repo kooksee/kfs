@@ -9,8 +9,8 @@ import (
 var (
 	logger log15.Logger
 	cfg    *config.Config
-	kvDb   *kdb.KHash
-	metaDb *kdb.KHash
+	kvDb   kdb.IKHash
+	metaDb kdb.IKHash
 
 	kvPrefix   = []byte("kv")
 	metaPrefix = []byte("meta")

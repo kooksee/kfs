@@ -1,8 +1,6 @@
 package types
 
 type FileMeta struct {
-	Metadata
-
 	Name    string `json:"name,omitempty"`
 	Size    int64  `json:"size,omitempty"`
 	Mode    string `json:"node,omitempty"`

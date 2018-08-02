@@ -1,8 +1,6 @@
 package types
 
 type User struct {
-	Metadata
-
 	Email       []string `json:"email,omitempty"`
 	Phone       []string `json:"phone,omitempty"`
 	Name        string   `json:"name,omitempty"`
