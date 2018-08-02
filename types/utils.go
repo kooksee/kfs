@@ -4,7 +4,6 @@ import (
 	"time"
 	"io/ioutil"
 	"encoding/hex"
-	"os"
 	"io"
 	"math/big"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -12,8 +11,8 @@ import (
 	"github.com/kooksee/kdb"
 )
 
-func CreateFileMeta(db kdb.IKHash, f string) (IMetadata, error) {
-	fm := &FileMeta{}
+func CreateFileMeta(db kdb.IKHash, f string) (*Metadata, error) {
+	fm := &Metadata{}
 
 	d, err := ioutil.ReadFile(f)
 	if err != nil {
@@ -25,17 +24,12 @@ func CreateFileMeta(db kdb.IKHash, f string) (IMetadata, error) {
 	fm.ID = fm.ContentHash
 	fm.Status = "create"
 
-	f1, _ := os.Open(f)
-	stat, err := f1.Stat()
+	fMeta, err := NewFileMeta(f)
 	if err != nil {
 		return nil, err
 	}
-
-	fm.Title = stat.Name()
-	fm.Size = stat.Size()
-	fm.Mode = stat.Mode().String()
-	fm.ModTime = stat.ModTime().Unix()
-	fm.IsDir = stat.IsDir()
+	fm.Title = fMeta.Name
+	fm.Data = fMeta
 	fm.CreateTime = time.Now().Unix()
 	fm.UpdateTime = fm.CreateTime
 
