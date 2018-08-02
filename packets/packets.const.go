@@ -1,18 +1,18 @@
 package packets
 
 const (
-	KVSetReqT = byte(0x4)
-	KVSetReqS = "kv set req"
+	kVSetReqT = byte(0x4)
+	kVSetReqS = "kv set req"
 
-	KVGetReqT = byte(0x5)
-	KVGetReqS = "kv get req"
+	kVGetReqT = byte(0x5)
+	kVGetReqS = "kv get req"
 
-	KVGetRespT = byte(0x6)
-	KVGetRespS = "kv get resp"
+	kVGetRespT = byte(0x6)
+	kVGetRespS = "kv get resp"
 
-	ChatReqT = byte(0x7)
-	ChatReqS = "chat req"
+	chatReqT = byte(0x7)
+	chatReqS = "chat req"
 
-	ChatRespT = byte(0x8)
-	ChatRespS = "chat resp"
+	chatRespT = byte(0x8)
+	chatRespS = "chat resp"
 )

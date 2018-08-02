@@ -17,15 +17,15 @@ var (
 
 func Init() {
 	cfg = config.GetCfg()
-	logger = cfg.Log().New("package", "packets")
+	logger = cfg.Log().New("pkg", "packets")
 	kvDb = cfg.GetDb().KHash(kvPrefix)
 
 	sp2p.RegistryHandlers(
-		KVSetReq{},
-		KVGetReq{},
-		KVGetResp{},
+		kVSetReq{},
+		kVGetReq{},
+		kVGetResp{},
 
-		ChatReq{},
-		ChatResp{},
+		chatReq{},
+		chatResp{},
 	)
 }

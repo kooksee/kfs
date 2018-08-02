@@ -9,57 +9,58 @@ import (
  */
 
 type kv struct {
+	sp2p.IMessage
+
 	K []byte `json:"k,omitempty"`
 	V []byte `json:"v,omitempty"`
 }
 
-type KVSetReq struct{ kv }
+type kVSetReq struct{ kv }
 
-func (t *KVSetReq) T() byte        { return KVSetReqT }
-func (t *KVSetReq) String() string { return KVSetReqS }
-func (t *KVSetReq) OnHandle(p sp2p.ISP2P, msg *sp2p.KMsg) {
+func (t *kVSetReq) T() byte        { return kVSetReqT }
+func (t *kVSetReq) String() string { return kVSetReqS }
+func (t *kVSetReq) OnHandle(p sp2p.ISP2P, msg *sp2p.KMsg) error {
 	nodes := p.FindNodeWithTargetBySelf(sp2p.BytesToHash(t.K).Hex())
 
 	if len(nodes) < 3 {
-		if err := kvDb.Set(t.K, t.V); err != nil {
-			logger.Error("kvset error", "err", err)
-		}
-		return
+		return kvDb.Set(t.K, t.V)
 	}
 
 	for _, node := range nodes {
-		p.Write(&sp2p.KMsg{FAddr: msg.FAddr, Data: msg.Data, TAddr: node})
+		p.Write(&sp2p.KMsg{FN: msg.FN, Data: msg.Data, TN: node})
 	}
+
+	return nil
 }
 
-type KVGetReq struct{ kv }
+type kVGetReq struct{ kv }
 
-func (t *KVGetReq) T() byte        { return KVGetReqT }
-func (t *KVGetReq) String() string { return KVGetReqS }
-func (t *KVGetReq) OnHandle(p sp2p.ISP2P, msg *sp2p.KMsg) {
-	nodes := p.FindNodeWithTargetBySelf(sp2p.BytesToHash(t.K))
+func (t *kVGetReq) T() byte        { return kVGetReqT }
+func (t *kVGetReq) String() string { return kVGetReqS }
+func (t *kVGetReq) OnHandle(p sp2p.ISP2P, msg *sp2p.KMsg) error {
+	nodes := p.FindNodeWithTargetBySelf(sp2p.BytesToHash(t.K).Hex())
 	if len(nodes) < 3 {
-		resp := &KVGetResp{}
+		resp := &kVGetResp{}
 		resp.K = t.K
 		resp.V, _ = kvDb.Get(t.K)
 
 		if len(resp.V) != 0 {
-			p.Write(&sp2p.KMsg{Data: resp, TAddr: msg.Addr, TID: msg.ID})
-			return
+			p.Write(&sp2p.KMsg{Data: resp, TN: msg.TN})
+			return nil
 		}
 	}
 
 	for _, node := range nodes {
-		p.Write(&sp2p.KMsg{Data: msg.Data, Addr: msg.Addr, ID: msg.ID, TID: node.ID.ToHex(), TAddr: node.AddrString()})
+		p.Write(&sp2p.KMsg{Data: msg.Data, FN: msg.FN, TN: node})
 	}
+
+	return nil
 }
 
-type KVGetResp struct{ kv }
+type kVGetResp struct{ kv }
 
-func (t *KVGetResp) T() byte        { return KVGetRespT }
-func (t *KVGetResp) String() string { return KVGetRespS }
-func (t *KVGetResp) OnHandle(p sp2p.ISP2P, msg *sp2p.KMsg) {
-	if err := kvDb.Set(t.K, t.V); err != nil {
-		logger.Error(err.Error())
-	}
+func (t *kVGetResp) T() byte        { return kVGetRespT }
+func (t *kVGetResp) String() string { return kVGetRespS }
+func (t *kVGetResp) OnHandle(p sp2p.ISP2P, msg *sp2p.KMsg) error {
+	return kvDb.Set(t.K, t.V)
 }
